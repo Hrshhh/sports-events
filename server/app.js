@@ -41,8 +41,8 @@ const sequelize = new Sequelize({
   database: process.env.DB_NAME
 });
 
-// const authRoutes = require('./routes/authRoutes');
-// app.use('/auth', authRoutes);
+const authRoutes = require('./routes/authRoutes');
+app.use('/',authRoutes);
 
 
 sequelize.sync().then(() => {

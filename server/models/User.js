@@ -1,11 +1,11 @@
 // models/User.js
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = require('../config/config'); // Adjust the path as needed
-
-const User = sequelize.define('User', {
-  id: {
+module.exports = function(sequelize, DataTypes) {
+  const User = sequelize.define(
+    'Users',
+     {
+  empid: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    primaryKey: true,
   },
   username: {
     type: DataTypes.STRING,
@@ -13,6 +13,7 @@ const User = sequelize.define('User', {
   },
   email: {
     type: DataTypes.STRING,
+    unique: true,
     allowNull: false,
   },
   role: {
@@ -23,10 +24,12 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  confirmpassword: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-});
+},
+  {
+    updatedAt: "UpdatedAt",
+    createdAt: "CreatedAt",
+  }
+ );
+ return User;
 
-module.exports = User;
+}
