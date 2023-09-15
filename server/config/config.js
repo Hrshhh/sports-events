@@ -1,6 +1,7 @@
 
 const { Sequelize } = require("sequelize");
 const UserModel = require("../models/User");
+const EventModel =require("../models/Event");
  const sequelize = new Sequelize({
     dialect: 'postgres',
     host: process.env.DB_HOST,
@@ -10,6 +11,7 @@ const UserModel = require("../models/User");
     database: process.env.DB_NAME
   })
 const User = UserModel(sequelize, Sequelize);
+const Event = EventModel(sequelize, Sequelize);
 
   sequelize
   .authenticate()
@@ -21,4 +23,4 @@ const User = UserModel(sequelize, Sequelize);
   });
 
   sequelize.sync({force:false})
-module.exports = {User};
+module.exports = {User, Event};
