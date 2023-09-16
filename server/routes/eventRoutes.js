@@ -26,5 +26,23 @@ view: async function (data) {
     } catch (error) {
       throw error;
     }
+  },
+
+update: async function (eventId, updatedEventData) {
+  try {
+    const event = await Event.findByPk(eventId);
+
+    if (!event) {
+      throw new Error("Event not found");
+    }
+
+    // Update the event
+    await event.update(updatedEventData);
+
+    return event;
+  } catch (error) {
+    throw error;
   }
+}
+
 }

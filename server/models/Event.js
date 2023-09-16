@@ -39,6 +39,7 @@ module.exports = function(sequelize, DataTypes) {
       },
       empid: {
         type: DataTypes.INTEGER,
+        allowNull: true,
       },
   },
     {

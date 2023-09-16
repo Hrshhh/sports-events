@@ -38,7 +38,7 @@ login : async function (data) {
       jsontoken = sign({result: data},"qwe1234",{
         expiresIn: "1h"
       })
-      return jsontoken
+      return {jsontoken, user}
      }else {
        return "Password Incorrect"
      }
