@@ -13,6 +13,7 @@ const EventModel =require("../models/Event");
 const User = UserModel(sequelize, Sequelize);
 const Event = EventModel(sequelize, Sequelize);
 
+
   sequelize
   .authenticate()
   .then(() => {

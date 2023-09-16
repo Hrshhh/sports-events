@@ -1,5 +1,5 @@
 const {
-    create, view
+    create, view, update
   } = require("../routes/eventRoutes");
 
   
@@ -34,6 +34,23 @@ const {
         message: "Something Went Wrong"
       });
     })
+    },
+    updateEvent : function (req,res){
+        const body = req.body;
+        const eventId= req.body.id
+     update(eventId,body).then(result=>{
+      return res.status(200).json({
+        success: 1,
+        data: result
+      });
+     }).catch(err => {
+      console.log(err)
+      return res.status(500).json({
+        success: 0,
+        message: "Something Went Wrong"
+      });
+    })
     }
+
   };
   
