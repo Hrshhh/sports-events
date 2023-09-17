@@ -36,7 +36,6 @@ update: async function (eventId, updatedEventData) {
       throw new Error("Event not found");
     }
 
-    // Update the event
     await event.update(updatedEventData);
 
     return event;

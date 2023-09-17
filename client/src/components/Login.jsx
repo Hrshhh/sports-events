@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import {Visibility, VisibilityOff} from '@mui/icons-material';
 import axios from "axios";
+import { toast } from 'react-toastify';
 
 
 function Login() {
@@ -31,16 +32,36 @@ function Login() {
     e.preventDefault();
     try{
       console.log("values", values);
-      await axios.post(`/login`, values)
+      await axios.post(`http://localhost:4000/login`, values)
       .then((res) => {
-        console.log("res", res);
+        console.log(res);
+        if(res.data){
+          
+          const response = res.data;
+          console.log(response.data)
+          if(response.data === 'User Not Found'){
+            console.log('we')
+            toast.error(`User not found`);
+            return;
+          }
+          else if(response.data === "Password Incorrect"){
+            toast.error(`Password Incorrect`);
+            return;
+          }
+          else{
+            setValues(initialValues);
+            toast.success(`Welcome to Sports Events !!!`);
+            window.localStorage.setItem("auth", response.data.jsontoken);
+          }
+          
+        }
       })
-      setValues({initialValues})
     }
     catch(err) {
-      console.log("Error while reegistration", err)
+      console.log("Error while registration", err);
+      
     }
-    console.log("sd", values);  
+    
   };
 
   return (
@@ -56,7 +77,7 @@ function Login() {
     >
       
       <Card className={styles.container}>
-        <h2>Signup</h2>
+        <h2 style={{ textAlign: "center", fontSize: "35px" }}>Login</h2>
         <form onSubmit={handleSubmit}>
           <TextField
             name="email"
@@ -93,12 +114,12 @@ function Login() {
             required
           />
           
-          <Button type="submit" color="secondary" variant="contained" style={{ width: "100%" }}>
+          <Button type="submit" color="secondary" variant="contained" style={{ width: "100%", background: "linear-gradient( 135deg, #5EFCE8 10%, #736EFE 100%)", padding: "10px 0" }}>
             Login In
           </Button>
         </form>
 
-        <div>
+        <div style={{ textAlign: "center", marginTop: "1rem" }}>
           <span>If u donn't have an account?</span><br/>
           <Link to="/registration">Register</Link>
         </div>

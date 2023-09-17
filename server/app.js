@@ -25,12 +25,14 @@
 // });
 
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 4000;
 const { Sequelize, DataTypes } = require('sequelize'); 
 require('dotenv').config();
 
 app.use(express.json());
+app.use(cors());
 
 const sequelize = new Sequelize({
   dialect: 'postgres',

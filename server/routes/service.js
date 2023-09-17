@@ -49,7 +49,6 @@ login : async function (data) {
     throw error
   }
 }
-
 }
 
 

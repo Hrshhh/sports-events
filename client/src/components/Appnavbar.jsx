@@ -26,19 +26,9 @@ function Appnavbar(){
         <Box sx={{ flexGrow: 1 }}>
           <AppBar position="static">
             <Toolbar>
-              {/* <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                sx={{ mr: 2 }}
-              >
-                <MenuIcon />
-              </IconButton> */}
-              {/* <div>{img}</div> */}
               <img
                     style={{ marginTop: 10,width: "40px", height: "40px"}}
-                    src={Logo} // Use the imported image
+                    src={Logo} 
                     alt="Logo"
                 />
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>

@@ -1,25 +1,26 @@
 // models/events.js
-module.exports = function(sequelize, DataTypes) {
-    const events = sequelize.define(
-      'Events',
-       {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-          },
-    venue: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    sport: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    dateTime: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    Requested: {
+module.exports = function (sequelize, DataTypes) {
+  const events = sequelize.define(
+    'Events',
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+      },
+      venue: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      sport: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      dateTime: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+    
+      Requested: {
         type: DataTypes.BOOLEAN,
         allowNull: true,
         defaultValue: false,
