@@ -21,8 +21,7 @@ const {
     },
   
     viewEvent : function (req,res){
-        const body = req.body;
-     view(body).then(result=>{
+     view().then(result=>{
       return res.status(200).json({
         success: 1,
         data: result

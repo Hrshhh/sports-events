@@ -9,6 +9,7 @@ import AdminEvents from './components/AdminEvents';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EmployeeEvents from './components/EmployeeEvents';
+import Profile from './components/Profile';
 
 
 function App() {
@@ -32,6 +33,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/registration" element={<Registration />} />
           <Route path="/admin-events" element={<AdminEvents />} />
+
+          <Route path="/user-profile" element={<Profile />} />
+          <Route path="/employee-events" element={<EmployeeEvents />} />
           <Route
             path="/admin"
             element={
@@ -40,6 +44,19 @@ function App() {
                   <SideBar />
                   <div style={{ width: "100vw" }}>
                     <AdminEvents />
+                  </div>
+                </div>
+              </>
+            }
+          />
+          <Route
+            path="/employee"
+            element={
+              <>
+                <div style={{ display: "flex" }}>
+                  <SideBar />
+                  <div style={{ width: "100vw" }}>
+                    <EmployeeEvents />
                   </div>
                 </div>
               </>

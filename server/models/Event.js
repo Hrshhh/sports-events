@@ -1,12 +1,16 @@
 // models/events.js
-module.exports = function (sequelize, DataTypes) {
+module.
+exports = function (sequelize, DataTypes) {
+  const { v4: uuidv4 } = require('uuid');
   const events = sequelize.define(
     'Events',
     {
       id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         primaryKey: true,
+        defaultValue: function (){ return uuidv4() }
       },
+      
       venue: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -15,11 +19,18 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      dateTime: {
+      date: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-    
+      startTime: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      endTime: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       Requested: {
         type: DataTypes.BOOLEAN,
         allowNull: true,
@@ -42,13 +53,16 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
-  },
+    },
     {
       updatedAt: "UpdatedAt",
       createdAt: "CreatedAt",
     }
-   );
-  
-   return events;
-  
-  }
+  );
+  events.beforeCreate((event, options) => {
+    event.id = uuidv4();
+  });
+
+  return events;
+
+}

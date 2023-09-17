@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from '../assets/css/Login.module.css'; 
 import Navbar from "./Appnavbar";
 import {
@@ -22,6 +22,7 @@ function Login() {
 
   const [values, setValues] = useState(initialValues);
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,13 +35,12 @@ function Login() {
       console.log("values", values);
       await axios.post(`http://localhost:4000/login`, values)
       .then((res) => {
-        console.log(res);
+        console.log(res.data.data.user);
         if(res.data){
           
           const response = res.data;
           console.log(response.data)
           if(response.data === 'User Not Found'){
-            console.log('we')
             toast.error(`User not found`);
             return;
           }
@@ -50,8 +50,10 @@ function Login() {
           }
           else{
             setValues(initialValues);
-            toast.success(`Welcome to Sports Events !!!`);
+            toast.success(`Welcome to Sports Events !!!`);     
             window.localStorage.setItem("auth", response.data.jsontoken);
+            window.localStorage.setItem("user", JSON.stringify(response.data.user));
+            navigate('/admin');
           }
           
         }
