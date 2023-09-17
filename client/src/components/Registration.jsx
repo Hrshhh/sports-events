@@ -20,7 +20,7 @@ import { toast } from "react-toastify";
 
 function Registration() {
   const initialValues = {
-    empid: "",
+    // empid: "",
     username: "",
     email: "",
     role: "Employee",
@@ -70,7 +70,7 @@ function Registration() {
         <Card className={styles.container}>
           <h2 style={{ textAlign: "center", fontSize: "35px" }}>Signup</h2>
           <form onSubmit={handleSubmit}>
-            <TextField
+            {/* <TextField
               name="empid"
               type="number"
               label="Employee Id"
@@ -79,7 +79,7 @@ function Registration() {
               placeholder="Enter Employee Id"
               style={{ width: "100%", marginBottom: "1rem" }}
               required
-            />
+            /> */}
             <TextField
               name="username"
               type="text"

@@ -31,6 +31,7 @@ view: async function (data) {
   update: async function (sport, updatedEquipData) {
     try {
       const event = await Equipment.findByPk(sport);
+      
   
       if (!event) {
         throw new Error("Event not found");
