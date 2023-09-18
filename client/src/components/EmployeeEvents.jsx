@@ -9,8 +9,6 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-
-
 import axios from 'axios';
 import { Menu, MenuItem, Button, Card, Modal, ListItemIcon, IconButton, Avatar, Tooltip, CardContent, Typography, Grid } from '@mui/material';
 
@@ -38,21 +36,20 @@ const EmployeeEvents = () => {
     const navigate = useNavigate();
     let user = window.localStorage.getItem("user");
     let userValues = JSON.parse(user);
-
+    let token = window.localStorage.getItem("auth");
 
     const sports =
     {
-        "Table Tennis": "90 minutes",
+        "Table-Tennis": "90 minutes",
         "Carrom": "45 minutes",
         "Chess": "90 minutes",
         "Cricket": "180 minutes",
         "Hockey": "150 minutes",
         "Boxing": "150 minutes",
-        "Lawn Tennis": "180 minutes",
+        "Lawn-Tennis": "180 minutes",
         "Badminton": "90 minutes",
         "Basketball": "150 minutes"
     }
-    let token = window.localStorage.getItem("auth");
     useEffect(() => {
         try {
             axios.get(`http://localhost:4000/viewEvent`, { headers: { "Authorization": `Bearer ${token}` } }).then((res) => {
@@ -68,10 +65,9 @@ const EmployeeEvents = () => {
 
     useEffect(() => {
         try {
-            axios.get(`http://localhost:4000/viewEquip`).then((res) => {
-                console.log(...res.data.data);
+            axios.get(`http://localhost:4000/viewEquip`, { headers: { "Authorization": `Bearer ${token}` } }).then((res) => {
                 if (res) {
-                    setSportsDataList([...res.data.data]);
+                    setSportsDataList(res.data.data);
                 }
 
             })
@@ -129,18 +125,11 @@ const EmployeeEvents = () => {
             return updatedData;
         });
     };
-    const handleUpdateEquipment = async (itemName, quantity) => {
+    const handleUpdateEquipment = async () => {
         try {
-            const response = await fetch(`http://localhost:4000/updateEquip/${selectedSportData}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    itemName: itemName,
-                    quantity: quantity,
+            const response = await axios.put(`http://localhost:4000/updateEquip/${selectedSportData}`, sportsDataList, {
+                headers: { "Authorization": `Bearer ${token}` },
 
-                }),
             });
 
             if (response.status === 200) {
@@ -159,8 +148,6 @@ const EmployeeEvents = () => {
         const date2 = endTime.toDate();
         const timeDifference = date2 - date1;
         const minutesDifference = timeDifference / (1000 * 60);
-        console.log(typeof (minutesDifference))
-        console.log(typeof (Number(sports[sendData.sport].split(" ")[0])))
         const payload = {
             ...sendData,
             Requested: true,
@@ -173,8 +160,7 @@ const EmployeeEvents = () => {
         if (minutesDifference < Number(sports[sendData.sport].split(" ")[0])) {
             try {
                 await axios.put(`http://localhost:4000/updateEvent`, payload, { headers: { "Authorization": `Bearer ${token}` } }).then((res) => {
-                    console.log(res);
-                    //   setAllEvents([...allEvents, res.data.data])
+
                     setModal(false)
                 })
             }
@@ -196,7 +182,6 @@ const EmployeeEvents = () => {
 
     const sportdata = sportsDataList.find((sport) => sport.sport === selectedSportData);
 
-    console.log(sportdata, selectedSportData, sportsDataList)
     const rows =
         allEvents && allEvents.map((row) => {
             return (
@@ -301,73 +286,73 @@ const EmployeeEvents = () => {
             </Box>
             <Modal open={modal}>
                 <>
-                <Card style={{ position: 'absolute', top: '50%', left: '50%', width: "600px", transform: 'translate(-50%, -50%)', padding: "25px" }}>
-                    <form onSubmit={handleSubmit}>
-                        <h2 >Please Select CheckIn Time</h2>
-                        <p>{bookingMsg}</p>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DemoContainer components={['TimePicker', 'TimePicker']}>
-                                <TimePicker
-                                    label="Start Time"
-                                    value={value}
-                                    onChange={(newValue) => setValue(newValue)}
-                                />
-                                <TimePicker
-                                    label="End Time"
-                                    value={endTime}
-                                    onChange={(newValue) => setEndTime(newValue)}
-                                />
-                            </DemoContainer>
-                        </LocalizationProvider>
+                    <Card style={{ position: 'absolute', top: '50%', left: '50%', width: "600px", transform: 'translate(-50%, -50%)', padding: "25px" }}>
+                        <form onSubmit={handleSubmit}>
+                            <h2 >Please Select CheckIn Time</h2>
+                            <p>{bookingMsg}</p>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DemoContainer components={['TimePicker', 'TimePicker']}>
+                                    <TimePicker
+                                        label="Start Time"
+                                        value={value}
+                                        onChange={(newValue) => setValue(newValue)}
+                                    />
+                                    <TimePicker
+                                        label="End Time"
+                                        value={endTime}
+                                        onChange={(newValue) => setEndTime(newValue)}
+                                    />
+                                </DemoContainer>
+                            </LocalizationProvider>
 
 
-                        <div style={{ display: "flex", justifyContent: "end" }}>
-                            <Button variant="contained" color="inherit" onClick={() => setModal(false)} style={{ marginRight: "1rem" }}>Close</Button>
-                            <Button variant="contained" type="submit">Save</Button>
-                        </div>
+                            <div style={{ display: "flex", justifyContent: "end" }}>
+                                <Button variant="contained" color="inherit" onClick={() => setModal(false)} style={{ marginRight: "1rem" }}>Close</Button>
+                                <Button variant="contained" type="submit">Save</Button>
+                            </div>
 
-                    </form>
-                </Card>
-                <Card style={{ width: '400px', boxShadow: 'none' }}>
-                    {sportdata != undefined && (
-                        <>
-                            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
-                                <Card style={{ width: '400px' }}>
-                                    <CardContent>
-                                        <Typography variant="h5" style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                                            {sportdata.sport} Equipment
-                                        </Typography>
-                                        <Grid container spacing={2}>
-                                            {sportdata.Equipname.map((item) => (
-                                                <Grid item xs={12} key={item.item}>
-                                                    <Grid container justifyContent="space-between" alignItems="center">
-                                                        <Grid item xs={6}>
-                                                            {item.item}:
-                                                        </Grid>
-                                                        <Grid item xs={6} style={{ textAlign: 'right' }}>
-                                                            <Button variant="contained" onClick={() => handleQuantityChange(item.item, 'decrement')}>
-                                                                -
-                                                            </Button>
-                                                            <span style={{ margin: '0 0.5rem' }}>{item.quantity || 0}</span>
-                                                            <Button variant="contained" onClick={() => handleQuantityChange(item.item, 'increment')}>
-                                                                +
-                                                            </Button>
+                        </form>
+                    </Card>
+                    <Card style={{ width: '400px', boxShadow: 'none' }}>
+                        {sportdata != undefined && (
+                            <>
+                                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+                                    <Card style={{ width: '400px' }}>
+                                        <CardContent>
+                                            <Typography variant="h5" style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                                                {sportdata.sport} Equipment
+                                            </Typography>
+                                            <Grid container spacing={2}>
+                                                {sportdata.Equipname.map((item) => (
+                                                    <Grid item xs={12} key={item.item}>
+                                                        <Grid container justifyContent="space-between" alignItems="center">
+                                                            <Grid item xs={6}>
+                                                                {item.item}:
+                                                            </Grid>
+                                                            <Grid item xs={6} style={{ textAlign: 'right' }}>
+                                                                <Button variant="contained" onClick={() => handleQuantityChange(item.item, 'decrement')}>
+                                                                    -
+                                                                </Button>
+                                                                <span style={{ margin: '0 0.5rem' }}>{item.quantity || 0}</span>
+                                                                <Button variant="contained" onClick={() => handleQuantityChange(item.item, 'increment')}>
+                                                                    +
+                                                                </Button>
+                                                            </Grid>
                                                         </Grid>
                                                     </Grid>
-                                                </Grid>
-                                            ))}
-                                        </Grid>
-                                    </CardContent>
-                                </Card>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
-                                <Button variant="contained" color="primary" onClick={handleUpdateEquipment} style={{ marginTop: '1rem' }}>
-                                    Submit
-                                </Button>
-                            </div>
-                        </>
-                    )}
-                </Card>
+                                                ))}
+                                            </Grid>
+                                        </CardContent>
+                                    </Card>
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+                                    <Button variant="contained" color="primary" onClick={handleUpdateEquipment} style={{ marginTop: '1rem' }}>
+                                        Submit
+                                    </Button>
+                                </div>
+                            </>
+                        )}
+                    </Card>
                 </>
             </Modal>
 

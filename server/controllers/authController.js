@@ -6,7 +6,6 @@ const { sign } = require("jsonwebtoken");
 
 module.exports = {
   createUser: function (req, res) {
-    console.log("sd", req.body);
     const body = req.body;
     const salt = genSaltSync(10);
     body.password = hashSync(body.password, salt);
@@ -16,7 +15,6 @@ module.exports = {
         data: results
       });
     }).catch(err => {
-      console.log(err)
       return res.status(500).json({
         success: 0,
         message: "Something Went Wrong"
@@ -32,7 +30,6 @@ module.exports = {
       data: result
     });
    }).catch(err => {
-    console.log(err)
     return res.status(500).json({
       success: 0,
       message: "Something Went Wrong"

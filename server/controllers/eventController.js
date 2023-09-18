@@ -12,7 +12,6 @@ const {
           data: results
         });
       }).catch(err => {
-        console.log(err)
         return res.status(500).json({
           success: 0,
           message: "Something Went Wrong"
@@ -27,7 +26,6 @@ const {
         data: result
       });
      }).catch(err => {
-      console.log(err)
       return res.status(500).json({
         success: 0,
         message: "Something Went Wrong"
@@ -43,7 +41,6 @@ const {
         data: result
       });
      }).catch(err => {
-      console.log(err)
       return res.status(500).json({
         success: 0,
         message: "Something Went Wrong"

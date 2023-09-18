@@ -56,7 +56,7 @@ const AdminEvents = () => {
 
         try {
             await axios.post(`http://localhost:4000/createEvent`, { ...values },{ headers: {"Authorization" : `Bearer ${token}`}}).then((res) => {
-                console.log(res);
+                
                 setAllEvents([...allEvents, res.data.data])
                 setValues(initialValues);
                 setModal(false);
@@ -86,7 +86,7 @@ const AdminEvents = () => {
     };
 
     const handleApprove = async (row) => {
-        console.log(row)
+        
         const payload = {
             ...row,
             Approved: true,
@@ -94,7 +94,7 @@ const AdminEvents = () => {
         }
         try {
             await axios.put(`http://localhost:4000/updateEvent`, payload, { headers: {"Authorization" : `Bearer ${token}`}}).then((res) => {
-                console.log(res);
+                
                   setAllEvents([...allEvents, res.data.data])
             })
         }
@@ -114,7 +114,6 @@ const AdminEvents = () => {
         { field: 'action', headerName: ' Action', width: 150 },
     ];
 
-
     const rows =
         allEvents && allEvents.map((row) => {
             return (
@@ -125,7 +124,7 @@ const AdminEvents = () => {
                     date: row.date,
                     RequestedBy: row.RequestedBy,
                     ApprovedBy: row.ApprovedBy,
-                    action: row.ApprovedBy === null || row.ApprovedBy === ''  ?
+                    action: row.ApprovedBy === "" && row.RequestedBy !== ""  ?
                         (
                             <>
                                 <Button

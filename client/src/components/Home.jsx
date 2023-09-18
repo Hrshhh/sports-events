@@ -13,16 +13,19 @@ import {
   Button,
 } from '@mui/material';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const [selectedSport, setSelectedSport] = useState('Cricket');
   const [sportsDataList, setSportsDataList] = useState([]);
-
+  let token = window.localStorage.getItem("auth");
+  const navigate = useNavigate();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(()=>{
     try {
-       axios.get(`http://localhost:4000/viewEquip`).then((res) => {
+       axios.get(`http://localhost:4000/viewEquip`, { headers: {"Authorization" : `Bearer ${token}`}}).then((res) => {
           console.log(...res.data.data);
           if (res) {
             setSportsDataList([...res.data.data]);
@@ -35,7 +38,6 @@ function Home() {
   }
   },[])
 
-  console.log(sportsDataList)
   const handleQuantityChange = (itemName, operation) => {
     setSportsDataList((prevData) => {
       const updatedData = [...prevData];
@@ -63,27 +65,19 @@ function Home() {
   const sportdata = sportsDataList.find((sport) => sport.sport === selectedSport);
 
 
-  const handleUpdateEquipment = async (itemName, quantity) => {
+  const handleUpdateEquipment = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/updateEquip/${selectedSport}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          itemName: itemName,
-          quantity: quantity,
-          // Add other equipment data as needed
-        }),
+      const response = await axios.put(`http://localhost:4000/updateEquip/${selectedSport}`, sportsDataList, {
+        headers: {"Authorization" : `Bearer ${token}`},
+        
       });
   
       if (response.status === 200) {
-        // Equipment update successful, you can handle success logic here
-        console.log('Equipment updated successfully.');
+        toast.success('Equipment updated successfully.');
         console.log('Submitted Data:', sportsDataList);
+        navigate('/admin-events');
       } else {
-        // Handle error cases here
-        console.error('Equipment update failed.');
+        toast.error('Equipment update failed.');
       }
     } catch (error) {
       console.error('Error updating equipment:', error);

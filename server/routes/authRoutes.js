@@ -17,7 +17,7 @@ router.post('/login', loginUser);
 // router.post('/login', loginUser);
 router.post('/createEquip', checkToken, createEquip)
 router.get('/viewEquip',checkToken,  viewEquip)
-router.put('/updateEquip',checkToken,  updateEquip)
+router.put('/updateEquip/:selectedSport',checkToken,  updateEquip)
 
 module.exports = router;
 

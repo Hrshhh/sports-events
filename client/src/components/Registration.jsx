@@ -20,7 +20,7 @@ import { toast } from "react-toastify";
 
 function Registration() {
   const initialValues = {
-    // empid: "",
+    empid: "",
     username: "",
     email: "",
     role: "Employee",
@@ -39,8 +39,7 @@ function Registration() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("submit", values);
-      await axios.post(`http://localhost:4000/register`, values)
+      await axios.post(`http://localhost:4000/create`, values)
         .then((res) => {
           if(res.data){
             setValues(initialValues); 
@@ -68,7 +67,7 @@ function Registration() {
         <Card className={styles.container}>
           <h2 style={{ textAlign: "center", fontSize: "35px" }}>Signup</h2>
           <form onSubmit={handleSubmit}>
-            {/* <TextField
+            <TextField
               name="empid"
               type="number"
               label="Employee Id"
@@ -77,7 +76,7 @@ function Registration() {
               placeholder="Enter Employee Id"
               style={{ width: "100%", marginBottom: "1rem" }}
               required
-            /> */}
+            />
             <TextField
               name="username"
               type="text"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
 import Registration from './components/Registration';
@@ -9,13 +9,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EmployeeEvents from './components/EmployeeEvents';
 import Profile from './components/Profile';
+import Role from "./components/Role";
 
 
 function App() {
   return (
     <BrowserRouter>
-      <ToastContainer autoClose={1000}/>
-        {/* <div style={{ display: "flex" }}>
+      <ToastContainer autoClose={1000} />
+      {/* <div style={{ display: "flex" }}>
           <SideBar />
           <div style={{ width: "100vw" }}>
             <Routes>
@@ -30,27 +31,28 @@ function App() {
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/role" element={<Role />} />
           <Route path="/registration" element={<Registration />} />
           <Route path="/admin-events" element={<AdminEvents />} />
-          <Route path="/" exact={true} element={<Home />} />
+          <Route path="/" exact={true} element={<Navigate to="/registration" />} />
           <Route path="/user-profile" element={
-           <div style={{ display: "flex" }}>
-           <SideBar />
-           <div style={{ width: "100vw" }}>
-          <Profile />
-          </div>
-          </div>} />
-          <Route path="/employee-events" element={
-            <>
             <div style={{ display: "flex" }}>
               <SideBar />
               <div style={{ width: "100vw" }}>
-          <EmployeeEvents />
-          </div>
+                <Profile />
+              </div>
+            </div>} />
+          <Route path="/employee-events" element={
+            <>
+              <div style={{ display: "flex" }}>
+                <SideBar />
+                <div style={{ width: "100vw" }}>
+                  <EmployeeEvents />
                 </div>
-              </>
+              </div>
+            </>
           } />
-            
+
           <Route
             path="/admin"
             element={
