@@ -22,26 +22,24 @@ const StyledSidebarHeader = styled.div`
 const SidebarHeader = ({collapse, setCollapse}) => {
 
     const collapseClick = () => {
-        collapse ? setCollapse(false) : setCollapse(true);
+         setCollapse(!collapse);
       };
 
   return (
     <StyledSidebarHeader
       className="d-flex justify-content-center align-items-center py-4"
     >
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <Link to={"/"}>
-          {/* <WorkspacesRoundedIcon style={{ height: "40px", width: "40px" }}/> */}
+      <div style={{ display: "flex", alignItems: "center" }} onClick={collapseClick}>
+
           <img 
             src={Logo}
             alt="Logo"
             style={{ width: "30px", height: "30px"}}
           />
-        </Link>
+         
         &nbsp;&nbsp;
         {!collapse && (
           <span>
-            {" "}
             <div className="sidebar-link" style={{fontSize: "24px", fontWeight: "bold"}} >
               Sports Events
             </div>{" "}
@@ -55,7 +53,7 @@ const SidebarHeader = ({collapse, setCollapse}) => {
             <ArrowCircleLeftRoundedIcon style={{color: "black"}} />
           )}
         </div>
-      </div>
+        </div>
     </StyledSidebarHeader>
   )
 }

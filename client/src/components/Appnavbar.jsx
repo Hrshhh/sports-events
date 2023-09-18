@@ -14,13 +14,7 @@ import Logo from '../assets/images/Logo.jpg';
 function Appnavbar(){
     const history = useNavigate();
 
-    const handleLoginClick = () => {
-        history('/login');
-    };
-
-    const handleRegistrationClick = () => {
-        history('/registration');
-    };
+  
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -31,16 +25,10 @@ function Appnavbar(){
                     src={Logo} 
                     alt="Logo"
                 />
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              <Typography variant="h6"  component="div" sx={{ flexGrow: 1 }}>
                 Sportz Events
               </Typography>
               <div>
-            <Button color="inherit" onClick={handleLoginClick}>
-                Login
-            </Button>
-            <Button color="inherit" onClick={handleRegistrationClick}>
-                Register
-            </Button>
         </div>
             </Toolbar>
           </AppBar>

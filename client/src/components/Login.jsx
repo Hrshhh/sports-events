@@ -53,7 +53,13 @@ function Login() {
             toast.success(`Welcome to Sports Events !!!`);     
             window.localStorage.setItem("auth", response.data.jsontoken);
             window.localStorage.setItem("user", JSON.stringify(response.data.user));
+            if(response.data.role === 'admin')
+            {
             navigate('/admin');
+            }
+            else {
+              navigate('/employee-events');
+            }
           }
           
         }

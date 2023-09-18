@@ -1,15 +1,16 @@
-import { Button, Card, Modal, TextField } from '@mui/material'
+
 import React, { useState } from 'react';
-import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
+import { Link, useNavigate } from 'react-router-dom';
+import { Sidebar, Menu, SubMenu } from "react-pro-sidebar";
 import ApiIcon from '@mui/icons-material/Api';
 import AddBoxIcon from '@mui/icons-material/AddBox';
-import { Link } from 'react-router-dom';
+
 import SidebarHeader from './SidebarHeader';
-import { useNavigate } from 'react-router-dom';
 import "./style.css";
 
 const SideBar = () => {
     const [collapse, setCollapse] = useState(false);
+    const navigate = useNavigate()
     return (
         <>
             <Sidebar style={{ height: "100vh" }} collapsed={collapse}>

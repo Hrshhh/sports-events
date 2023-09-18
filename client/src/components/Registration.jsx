@@ -29,8 +29,6 @@ function Registration() {
 
   const [values, setValues] = useState(initialValues);
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [passwordError, setPasswordError] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {

@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
 import Registration from './components/Registration';
-import Admin from './components/Admin';
 import SideBar from './components/SideBar';
 import AdminEvents from './components/AdminEvents';
 import { ToastContainer, toast } from 'react-toastify';
@@ -34,8 +33,24 @@ function App() {
           <Route path="/registration" element={<Registration />} />
           <Route path="/admin-events" element={<AdminEvents />} />
           <Route path="/" exact={true} element={<Home />} />
-          <Route path="/user-profile" element={<Profile />} />
-          <Route path="/employee-events" element={<EmployeeEvents />} />
+          <Route path="/user-profile" element={
+           <div style={{ display: "flex" }}>
+           <SideBar />
+           <div style={{ width: "100vw" }}>
+          <Profile />
+          </div>
+          </div>} />
+          <Route path="/employee-events" element={
+            <>
+            <div style={{ display: "flex" }}>
+              <SideBar />
+              <div style={{ width: "100vw" }}>
+          <EmployeeEvents />
+          </div>
+                </div>
+              </>
+          } />
+            
           <Route
             path="/admin"
             element={
