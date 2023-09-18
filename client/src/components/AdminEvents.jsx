@@ -30,10 +30,9 @@ const AdminEvents = () => {
     let token = window.localStorage.getItem("auth");
     let userValues = JSON.parse(user);
 
-    useEffect(async () => {
+    useEffect(() => {
         try {
-            await axios.get(`http://localhost:4000/viewEvent`,{ headers: {"Authorization" : `Bearer ${token}`}}).then((res) => {
-                console.log(...res.data.data);
+             axios.get(`http://localhost:4000/viewEvent`,{ headers: {"Authorization" : `Bearer ${token}`}}).then((res) => {
                 if (res) {
                     setAllEvents([...res.data.data]);
                 }

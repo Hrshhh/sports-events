@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import { Logout, Settings } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -12,7 +12,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
 
 import axios from 'axios';
-import {  Menu, MenuItem, Button, Card, Modal, TextField, ListItemIcon, IconButton, Avatar, Tooltip } from '@mui/material';
+import { Menu, MenuItem, Button, Card, Modal, ListItemIcon, IconButton, Avatar, Tooltip, CardContent, Typography, Grid } from '@mui/material';
 
 
 const VISIBLE_FIELDS = ['id', 'venue', 'sport', 'date'];
@@ -25,11 +25,12 @@ const EmployeeEvents = () => {
         sport: "",
         date: ""
     };
-    const [sendData,setSendData]= useState({})
+    const [sendData, setSendData] = useState({})
+    const [selectedSportData, setSelectedSportData] = useState('Cricket')
     const [value, setValue] = useState(dayjs('2022-04-17T15:30'));
     const [endTime, setEndTime] = useState(dayjs('2022-04-17T15:30'));
     const [bookingMsg, setbookingMsg] = useState('')
-    const [values, setValues] = useState(initialValues);
+    const [sportsDataList, setSportsDataList] = useState([]);
     const [allEvents, setAllEvents] = useState([]);
     const [modal, setModal] = useState(false);
     const [open, setOpen] = useState(false);
@@ -37,6 +38,7 @@ const EmployeeEvents = () => {
     const navigate = useNavigate();
     let user = window.localStorage.getItem("user");
     let userValues = JSON.parse(user);
+
 
     const sports =
     {
@@ -49,11 +51,11 @@ const EmployeeEvents = () => {
         "Lawn Tennis": "180 minutes",
         "Badminton": "90 minutes",
         "Basketball": "150 minutes"
-      }
-      let token = window.localStorage.getItem("auth");
-    useEffect( () => {
+    }
+    let token = window.localStorage.getItem("auth");
+    useEffect(() => {
         try {
-             axios.get(`http://localhost:4000/viewEvent`,{ headers: {"Authorization" : `Bearer ${token}`}}).then((res) => {
+            axios.get(`http://localhost:4000/viewEvent`, { headers: { "Authorization": `Bearer ${token}` } }).then((res) => {
                 if (res) {
                     setAllEvents([...res.data.data]);
                 }
@@ -61,6 +63,21 @@ const EmployeeEvents = () => {
             })
         }
         catch (err) {
+        }
+    }, [])
+
+    useEffect(() => {
+        try {
+            axios.get(`http://localhost:4000/viewEquip`).then((res) => {
+                console.log(...res.data.data);
+                if (res) {
+                    setSportsDataList([...res.data.data]);
+                }
+
+            })
+        }
+        catch (err) {
+            console.log("Error ", err);
         }
     }, [])
 
@@ -85,6 +102,7 @@ const EmployeeEvents = () => {
         setSendData({
             ...row
         })
+        setSelectedSportData(row.sport)
         setModal(true)
     }
 
@@ -92,30 +110,69 @@ const EmployeeEvents = () => {
         const hours = date.getHours().toString().padStart(2, '0');
         const minutes = date.getMinutes().toString().padStart(2, '0');
         const seconds = date.getSeconds().toString().padStart(2, '0');
-      
-        return `${hours}:${minutes}:${seconds}`;
-      }
 
+        return `${hours}:${minutes}:${seconds}`;
+    }
+
+    const handleQuantityChange = (itemName, operation) => {
+        setSportsDataList((prevData) => {
+            const updatedData = [...prevData];
+            const sportIndex = updatedData.findIndex((sport) => sport.sport === selectedSportData);
+            const itemIndex = updatedData[sportIndex].Equipname.findIndex((item) => item.item === itemName);
+
+            if (operation === 'increment') {
+                updatedData[sportIndex].Equipname[itemIndex].quantity += 1;
+            } else if (operation === 'decrement' && updatedData[sportIndex].Equipname[itemIndex].quantity > 0) {
+                updatedData[sportIndex].Equipname[itemIndex].quantity -= 1;
+            }
+
+            return updatedData;
+        });
+    };
+    const handleUpdateEquipment = async (itemName, quantity) => {
+        try {
+            const response = await fetch(`http://localhost:4000/updateEquip/${selectedSportData}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    itemName: itemName,
+                    quantity: quantity,
+
+                }),
+            });
+
+            if (response.status === 200) {
+                console.log('Equipment updated successfully.');
+                console.log('Submitted Data:', sportsDataList);
+            } else {
+                console.error('Equipment update failed.');
+            }
+        } catch (error) {
+            console.error('Error updating equipment:', error);
+        }
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
-      const  date1=value.toDate();
-      const date2= endTime.toDate();
-      const timeDifference = date2 - date1;
-      const minutesDifference = timeDifference / (1000 * 60); 
-        console.log(typeof(minutesDifference))
-        console.log(typeof(Number(sports[sendData.sport].split(" ")[0])))
-         const payload = {
+        const date1 = value.toDate();
+        const date2 = endTime.toDate();
+        const timeDifference = date2 - date1;
+        const minutesDifference = timeDifference / (1000 * 60);
+        console.log(typeof (minutesDifference))
+        console.log(typeof (Number(sports[sendData.sport].split(" ")[0])))
+        const payload = {
             ...sendData,
             Requested: true,
             startTime: dateToTimerString(date1),
             endTime: dateToTimerString(date2),
             RequestedBy: userValues?.username,
-            ApprovedBy:'',
+            ApprovedBy: '',
             Approved: false
         }
-        if(minutesDifference < Number(sports[sendData.sport].split(" ")[0])){
+        if (minutesDifference < Number(sports[sendData.sport].split(" ")[0])) {
             try {
-                await axios.put(`http://localhost:4000/updateEvent`, payload,{ headers: {"Authorization" : `Bearer ${token}`}}).then((res) => {
+                await axios.put(`http://localhost:4000/updateEvent`, payload, { headers: { "Authorization": `Bearer ${token}` } }).then((res) => {
                     console.log(res);
                     //   setAllEvents([...allEvents, res.data.data])
                     setModal(false)
@@ -125,18 +182,9 @@ const EmployeeEvents = () => {
                 console.log("Error ", err);
             }
         }
-        else{
+        else {
             toast.error("Your Time is greater than allocated time");
         }
-        // try {
-        //     await axios.put(`http://localhost:4000/updateEvent`, payload).then((res) => {
-        //         console.log(res);
-        //           setAllEvents([...allEvents, res.data.data])
-        //     })
-        // }
-        // catch (err) {
-        //     console.log("Error ", err);
-        // }
     }
     const column = [
         { field: 'id', headerName: 'ID', width: 250 },
@@ -146,6 +194,9 @@ const EmployeeEvents = () => {
         { field: 'action', headerName: ' Action', width: 150 },
     ];
 
+    const sportdata = sportsDataList.find((sport) => sport.sport === selectedSportData);
+
+    console.log(sportdata, selectedSportData, sportsDataList)
     const rows =
         allEvents && allEvents.map((row) => {
             return (
@@ -249,24 +300,25 @@ const EmployeeEvents = () => {
                     }} />
             </Box>
             <Modal open={modal}>
+                <>
                 <Card style={{ position: 'absolute', top: '50%', left: '50%', width: "600px", transform: 'translate(-50%, -50%)', padding: "25px" }}>
                     <form onSubmit={handleSubmit}>
                         <h2 >Please Select CheckIn Time</h2>
                         <p>{bookingMsg}</p>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['TimePicker', 'TimePicker']}>
-        <TimePicker
-          label="Start Time"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-        />
-         <TimePicker
-          label="End Time"
-          value={endTime}
-          onChange={(newValue) => setEndTime(newValue)}
-        />
-      </DemoContainer>
-    </LocalizationProvider>
+                            <DemoContainer components={['TimePicker', 'TimePicker']}>
+                                <TimePicker
+                                    label="Start Time"
+                                    value={value}
+                                    onChange={(newValue) => setValue(newValue)}
+                                />
+                                <TimePicker
+                                    label="End Time"
+                                    value={endTime}
+                                    onChange={(newValue) => setEndTime(newValue)}
+                                />
+                            </DemoContainer>
+                        </LocalizationProvider>
 
 
                         <div style={{ display: "flex", justifyContent: "end" }}>
@@ -276,6 +328,47 @@ const EmployeeEvents = () => {
 
                     </form>
                 </Card>
+                <Card style={{ width: '400px', boxShadow: 'none' }}>
+                    {sportdata != undefined && (
+                        <>
+                            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+                                <Card style={{ width: '400px' }}>
+                                    <CardContent>
+                                        <Typography variant="h5" style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                                            {sportdata.sport} Equipment
+                                        </Typography>
+                                        <Grid container spacing={2}>
+                                            {sportdata.Equipname.map((item) => (
+                                                <Grid item xs={12} key={item.item}>
+                                                    <Grid container justifyContent="space-between" alignItems="center">
+                                                        <Grid item xs={6}>
+                                                            {item.item}:
+                                                        </Grid>
+                                                        <Grid item xs={6} style={{ textAlign: 'right' }}>
+                                                            <Button variant="contained" onClick={() => handleQuantityChange(item.item, 'decrement')}>
+                                                                -
+                                                            </Button>
+                                                            <span style={{ margin: '0 0.5rem' }}>{item.quantity || 0}</span>
+                                                            <Button variant="contained" onClick={() => handleQuantityChange(item.item, 'increment')}>
+                                                                +
+                                                            </Button>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Grid>
+                                            ))}
+                                        </Grid>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+                                <Button variant="contained" color="primary" onClick={handleUpdateEquipment} style={{ marginTop: '1rem' }}>
+                                    Submit
+                                </Button>
+                            </div>
+                        </>
+                    )}
+                </Card>
+                </>
             </Modal>
 
         </>
